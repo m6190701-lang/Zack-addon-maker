@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zack's Addon Maker | Zack's Studios</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- BARRA DE NAVEGACIÓN PRINCIPAL -->
+    <header class="navbar">
+        <div class="logo-container">
+            <i class="fa-solid fa-cube logo-icon"></i>
+            <span class="studio-name">Zack's Studios</span>
+            <span class="product-name">/ Addon Maker</span>
+        </div>
+        <nav class="nav-links">
+            <button class="nav-btn active" onclick="switchView('home')"><i class="fa-solid fa-house"></i> Inicio</button>
+            <button class="nav-btn" onclick="switchView('maker')"><i class="fa-solid fa-hammer"></i> Addon Maker</button>
+            <button class="nav-btn" onclick="switchView('community')"><i class="fa-solid fa-users"></i> Comunidad</button>
+            <button class="nav-btn" onclick="openSettingsModal()"><i class="fa-solid fa-gear"></i> Configuración</button>
+        </nav>
+    </header>
+
+    <!-- VISTA 1: INICIO -->
+    <section id="view-home" class="view-section active">
+        <div class="hero">
+            <h1>Bienvenido a <span class="highlight">Zack's Addon Maker</span></h1>
+            <p>La plataforma definitiva de Zack's Studios para crear, editar y compartir addons de Minecraft Java y Bedrock.</p>
+            <div class="hero-actions">
+                <button class="btn-primary" onclick="switchView('maker')"><i class="fa-solid fa-wand-magic-sparkles"></i> Crear Addon</button>
+                <button class="btn-secondary" onclick="switchView('community')"><i class="fa-solid fa-globe"></i> Explorar Comunidad</button>
+            </div>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fa-solid fa-cube"></i>
+                <h3>Modelado 3D & Entidades</h3>
+                <p>Crea, importa modelos de Java/Bedrock, edita texturas, sonidos, animaciones GeckoLib y scripts avanzados.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-robot"></i>
+                <h3>Zack's Personal Friend</h3>
+                <p>Asistente de IA impulsado por Roboti y la API de Groq para ayudarte a programar, diseñar y modificar tu proyecto.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-share-nodes"></i>
+                <h3>Zack's Addon Community</h3>
+                <p>Comparte tus creaciones, descubre mods de otros usuarios, publica y obtén marcas de verificación oficiales.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- VISTA 2: ZACK'S ADDON MAKER (EDITOR) -->
+    <section id="view-maker" class="view-section">
+        <div class="maker-layout">
+            <!-- Menú Lateral del Editor -->
+            <aside class="maker-sidebar">
+                <div class="project-info">
+                    <span id="current-project-name">Proyecto: MiAddon</span>
+                    <button class="btn-small" onclick="createNewProject()"><i class="fa-solid fa-plus"></i></button>
+                </div>
+                <ul class="maker-menu">
+                    <li class="maker-tab active" onclick="switchMakerTab('modeling')"><i class="fa-solid fa-shapes"></i> Modelado</li>
+                    <li class="maker-tab" onclick="switchMakerTab('items')"><i class="fa-solid fa-shield-halved"></i> Items</li>
+                    <li class="maker-tab" onclick="switchMakerTab('interface')"><i class="fa-solid fa-window-maximize"></i> Interfaz</li>
+                    <li class="maker-tab" onclick="switchMakerTab('objects')"><i class="fa-solid fa-cubes"></i> Objetos (Bloques)</li>
+                    <li class="maker-tab" onclick="switchMakerTab('pack')"><i class="fa-solid fa-box-archive"></i> Pack & Exportar</li>
+                </ul>
+            </aside>
+
+            <!-- Contenido Dinámico del Editor -->
+            <main class="maker-content">
+                <!-- 3.1 MODELADO -->
+                <div id="maker-modeling" class="maker-panel active">
+                    <h2>Modelado 3D y Entidades</h2>
+                    <div class="sub-tabs">
+                        <button class="sub-tab-btn active" onclick="switchSubModeling('models')">Models</button>
+                        <button class="sub-tab-btn" onclick="switchSubModeling('textures')">Textures</button>
+                        <button class="sub-tab-btn" onclick="switchSubModeling('sounds')">Sounds</button>
+                        <button class="sub-tab-btn" onclick="switchSubModeling('scripting')">Scripting</button>
+                        <button class="sub-tab-btn" onclick="switchSubModeling('animations')">Animations</button>
+                        <button class="sub-tab-btn" onclick="switchSubModeling('ai')">AI Chatbot</button>
+                        <button class="sub-tab-btn" onclick="switchSubModeling('aspects')">Aspects</button>
+                    </div>
+                    <div class="sub-content-container">
+                        <!-- Models -->
+                        <div id="submod-models" class="submod-panel active">
+                            <div class="toolbar-actions">
+                                <button class="btn-primary" onclick="alert('Crear modelo 3D nuevo')"><i class="fa-solid fa-plus"></i> Crear Modelo</button>
+                                <button class="btn-secondary" onclick="importModelPrompt()"><i class="fa-solid fa-file-import"></i> Importar (Java/Bedrock)</button>
+                                <button class="btn-secondary" onclick="alert('Text to 3D AI Generación')"><i class="fa-solid fa-wand-magic-sparkles"></i> Text to 3D (IA)</button>
+                            </div>
+                            <div class="viewport-preview">
+                                <div class="placeholder-3d"><i class="fa-solid fa-cube"></i><span>Visor 3D Activo - Model Viewer</span></div>
+                            </div>
+                        </div>
+                        <!-- Textures -->
+                        <div id="submod-textures" class="submod-panel">
+                            <h3>Gestor de Texturas (Blockbench Style)</h3>
+                            <p>Mantén presionada una textura para aplicarla rápidamente a tus modelos del proyecto.</p>
+                            <input type="file" id="textureUpload" style="margin: 10px 0;">
+                            <div class="texture-grid" id="textureGrid">
+                                <div class="texture-item" draggable="true">Textura 1 (Ejemplo)</div>
+                            </div>
+                        </div>
+                        <!-- Sounds -->
+                        <div id="submod-sounds" class="submod-panel">
+                            <h3>Gestor de Sonidos (MP3 / OGG)</h3>
+                            <p>Los sonidos se activan mediante scripts vinculados al modelo.</p>
+                            <button class="btn-primary" onclick="alert('Importar archivo de sonido MP3/OGG')"><i class="fa-solid fa-file-audio"></i> Importar Audio</button>
+                        </div>
+                        <!-- Scripting -->
+                        <div id="submod-scripting" class="submod-panel">
+                            <h3>Editor de Código (Scripting)</h3>
+                            <div class="code-editor-mock">
+                                <span class="line-numbers">1<br>2<br>3<br>4</span>
+                                <textarea spellcheck="false">// Script de comportamiento para la entidad
+entity.on('spawn', function() {
+    console.log("Entidad inicializada con éxito en Zack's Addon Maker");
+});</textarea>
+                            </div>
+                        </div>
+                        <!-- Animations -->
+                        <div id="submod-animations" class="submod-panel">
+                            <h3>Línea de Tiempo GeckoLib</h3>
+                            <div class="timeline-mock">
+                                <div class="timeline-track"><span>Animación: idle (0.0s - 2.0s)</span></div>
+                            </div>
+                        </div>
+                        <!-- AI Chatbot -->
+                        <div id="submod-ai" class="submod-panel">
+                            <h3>Zack's Personal Friend (Asistente del Proyecto)</h3>
+                            <div class="chat-box" id="projectChatBox">
+                                <div class="chat-msg ai">¡Hola! Soy Roboti. ¿En qué te ayudo con tu modelo o script hoy?</div>
+                            </div>
+                            <div class="chat-input-area">
+                                <input type="text" id="projectChatInput" placeholder="Escribe una instrucción en lenguaje natural...">
+                                <button class="btn-primary" onclick="sendProjectMessage()">Enviar</button>
+                            </div>
+                        </div>
+                        <!-- Aspects -->
+                        <div id="submod-aspects" class="submod-panel">
+                            <h3>Aspectos Múltiples de Entidad</h3>
+                            <button class="btn-primary">+ Añadir Aspecto (Ej: Enfadado, Monstruoso)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3.2 ITEMS -->
+                <div id="maker-items" class="maker-panel">
+                    <h2>Creación y Edición de Items</h2>
+                    <p>Gestiona modelos 3D, texturas 2D/3D, sonidos, scripts y aspectos para tus nuevos ítems.</p>
+                </div>
+
+                <!-- 3.3 INTERFAZ -->
+                <div id="maker-interface" class="maker-panel">
+                    <h2>Diseño de Interfaces (GUI)</h2>
+                    <p>Crea menús personalizados, HUDs y pantallas interactivas para tu addon.</p>
+                </div>
+
+                <!-- 3.5 OBJETOS -->
+                <div id="maker-objects" class="maker-panel">
+                    <h2>Objetos (Bloques de Minecraft)</h2>
+                    <div class="sub-tabs">
+                        <button class="sub-tab-btn active">Bloques 3D</button>
+                        <button class="sub-tab-btn">Bloques 2D</button>
+                    </div>
+                    <p style="margin-top: 15px;">Editor dedicado para bloques personalizados con recursos avanzados.</p>
+                </div>
+
+                <!-- 3.4 PACK -->
+                <div id="maker-pack" class="maker-panel">
+                    <h2>Configurar y Exportar Pack</h2>
+                    <div class="form-group">
+                        <label>Nombre del Pack:</label>
+                        <input type="text" id="packNameInput" value="Mi Addon Genial">
+                    </div>
+                    <div class="form-group">
+                        <label>Manifest Description:</label>
+                        <textarea>Creado con Zack's Addon Maker - Zack's Studios</textarea>
+                    </div>
+                    <div class="export-buttons" style="margin-top: 20px;">
+                        <button class="btn-primary" onclick="exportFile('mcaddon')"><i class="fa-solid fa-file-arrow-down"></i> Generar .mcaddon</button>
+                        <button class="btn-secondary" onclick="exportFile('mcpack')"><i class="fa-solid fa-file-arrow-down"></i> Generar .mcpack</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </section>
+
+    <!-- VISTA 3: ZACK'S ADDON COMMUNITY -->
+    <section id="view-community" class="view-section">
+        <div class="community-header">
+            <h2>Zack's Addon Community</h2>
+            <div class="community-controls">
+                <input type="text" placeholder="Buscar addons..." id="searchInput">
+                <button class="btn-primary" onclick="openLoginModal()"><i class="fa-solid fa-user"></i> Cuenta / Iniciar Sesión</button>
+            </div>
+        </div>
+        <div class="addons-grid" id="communityAddonsGrid">
+            <div class="addon-card">
+                <div class="addon-img-placeholder"><i class="fa-solid fa-cube"></i></div>
+                <div class="addon-info">
+                    <h3>Epic Swords Mod <span class="verified-badge" title="Verificado por Administrador"><i class="fa-solid fa-circle-check"></i></span></h3>
+                    <p class="creator">Por: ZackViewer</p>
+                    <p class="desc">Añade espadas legendarias con animaciones personalizadas GeckoLib.</p>
+                    <button class="btn-small btn-primary">Descargar / Ver</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ASISTENTE FLOTANTE: ROBOTI (ZACK'S PERSONAL FRIEND) -->
+    <div class="roboti-assistant" id="robotiWidget">
+        <div class="roboti-head" onclick="toggleRobotiChat()">
+            <img src="1000143599.png" alt="Roboti" class="roboti-avatar-img">
+            <span class="roboti-status">Roboti (IA)</span>
+        </div>
+        <div class="roboti-window" id="robotiWindow" style="display: none;">
+            <div class="roboti-header">
+                <h4>Zack's Personal Friend</h4>
+                <button onclick="toggleRobotiChat()">&times;</button>
+            </div>
+            <div class="roboti-messages" id="robotiMessages">
+                <div class="chat-msg ai">¡Hola! Soy Roboti, tu asistente personal de Zack's Studios. ¿En qué te puedo ayudar hoy?</div>
+            </div>
+            <div class="roboti-input">
+                <input type="text" id="robotiInput" placeholder="Pregúntale a Roboti...">
+                <button onclick="sendRobotiMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIGURACIÓN DE API GROQ -->
+    <div class="modal" id="settingsModal" style="display: none;">
+        <div class="modal-content">
+            <h3>Configuración de Zack's Addon Maker</h3>
+            <label>Clave API de Groq (para Zack's Personal Friend):</label>
+            <input type="password" id="groqApiKeyInput" placeholder="gsk_...">
+            <p class="note">Tu clave se almacena de forma segura en tu navegador y se usa exclusivamente para conectar con la API de Groq.</p>
+            <div class="modal-actions">
+                <button class="btn-primary" onclick="saveSettings()">Guardar</button>
+                <button class="btn-secondary" onclick="closeSettingsModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
